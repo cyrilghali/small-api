@@ -1,8 +1,8 @@
 [
   {
     "name": "verify valid signature",
-    "description": "Verify a payload with a valid HMAC-SHA256 signature returns true",
-    "payload": {
+    "description": "Verify a payload with a valid HMAC-SHA256 signature returns 204 No Content",
+    "data": {
       "message": "hello world"
     },
     "signature": "f7120f77ad7c741c5b17413d7dbb44413cea542c0b0ecae1751ff2caf23b195b",
@@ -11,18 +11,18 @@
   },
   {
     "name": "verify invalid signature",
-    "description": "Verify a payload with an invalid signature returns false",
-    "payload": {
+    "description": "Verify a payload with an invalid signature returns 400 Bad Request",
+    "data": {
       "message": "hello world"
     },
-    "signature": "invalid_signature_12345",
+    "signature": "0000000000000000000000000000000000000000000000000000000000000000",
     "secret": "my-secret-key",
     "expectedResult": false
   },
   {
     "name": "verify with wrong secret",
-    "description": "Verify with a different secret than used for signing returns false",
-    "payload": {
+    "description": "Verify with a different secret than used for signing returns 400 Bad Request",
+    "data": {
       "user": "alice",
       "action": "transfer",
       "amount": 100
@@ -34,7 +34,7 @@
   {
     "name": "verify object with multiple fields",
     "description": "Verify a signed object with multiple fields (properties order-independent)",
-    "payload": {
+    "data": {
       "user": "alice",
       "action": "transfer",
       "amount": 100
@@ -46,15 +46,15 @@
   {
     "name": "verify empty object",
     "description": "Verify a signed empty object",
-    "payload": {},
+    "data": {},
     "signature": "2029f511842e550e8e0511dce1ab883cfbe4531c0ad64cb5ce3eeb8997c47786",
     "secret": "empty-secret",
     "expectedResult": true
   },
   {
     "name": "verify without signature field",
-    "description": "Verify returns false when signature is not provided",
-    "payload": {
+    "description": "Verify with missing signature field returns 400 Bad Request",
+    "data": {
       "message": "hello world"
     },
     "signature": null,
@@ -63,8 +63,8 @@
   },
   {
     "name": "verify modified payload",
-    "description": "Verify returns false when payload has been modified after signing",
-    "payload": {
+    "description": "Verify returns 400 when payload has been modified after signing",
+    "data": {
       "message": "hello world modified"
     },
     "signature": "f7120f77ad7c741c5b17413d7dbb44413cea542c0b0ecae1751ff2caf23b195b",
@@ -74,7 +74,7 @@
   {
     "name": "verify with different property order",
     "description": "Signature remains valid regardless of property order (canonical JSON)",
-    "payload": {
+    "data": {
       "amount": 100,
       "action": "transfer",
       "user": "alice"
