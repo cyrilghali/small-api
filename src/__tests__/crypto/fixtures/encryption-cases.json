@@ -1,0 +1,104 @@
+[
+  {
+    "name": "Simple string properties",
+    "description": "Keys stay plaintext. Only values are Base64 encoded.",
+    "input": {
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "expectedEncryptedValue": {
+      "name": "Sm9obiBEb2U=",
+      "email": "am9obkBleGFtcGxlLmNvbQ=="
+    }
+  },
+  {
+    "name": "Object with nested object at depth 1",
+    "description": "Keys stay plaintext. Nested objects are stringified then Base64 encoded.",
+    "input": {
+      "user": {
+        "name": "Alice",
+        "age": 30
+      },
+      "status": "active"
+    },
+    "expectedEncryptedValue": {
+      "user": "eyJuYW1lIjoiQWxpY2UiLCJhZ2UiOjMwfQ==",
+      "status": "YWN0aXZl"
+    }
+  },
+  {
+    "name": "Object with null value",
+    "description": "Keys stay plaintext. Null is stringified to 'null' then Base64 encoded.",
+    "input": {
+      "name": "Bob",
+      "age": null
+    },
+    "expectedEncryptedValue": {
+      "name": "Qm9i",
+      "age": "bnVsbA=="
+    }
+  },
+  {
+    "name": "Object with boolean values",
+    "description": "Keys stay plaintext. Booleans are stringified then Base64 encoded.",
+    "input": {
+      "active": true,
+      "verified": false
+    },
+    "expectedEncryptedValue": {
+      "active": "dHJ1ZQ==",
+      "verified": "ZmFsc2U="
+    }
+  },
+  {
+    "name": "Object with number values",
+    "description": "Keys stay plaintext. Numbers are stringified then Base64 encoded.",
+    "input": {
+      "age": 25,
+      "score": 95.5
+    },
+    "expectedEncryptedValue": {
+      "age": "MjU=",
+      "score": "OTUuNQ=="
+    }
+  },
+  {
+    "name": "Object with array values",
+    "description": "Keys stay plaintext. Arrays are JSON stringified then Base64 encoded.",
+    "input": {
+      "tags": ["javascript", "typescript"],
+      "counts": [1, 2, 3]
+    },
+    "expectedEncryptedValue": {
+      "tags": "WyJqYXZhc2NyaXB0IiwidHlwZXNjcmlwdCJd",
+      "counts": "WzEsMiwzXQ=="
+    }
+  },
+  {
+    "name": "Empty object",
+    "description": "Empty objects have no keys or values to encrypt.",
+    "input": {},
+    "expectedEncryptedValue": {}
+  },
+  {
+    "name": "Complex deeply nested structure",
+    "description": "Keys stay plaintext. All nested objects at depth 1 are stringified and Base64 encoded.",
+    "input": {
+      "contact": {
+        "email": "john@example.com",
+        "phone": "123-456-7890"
+      },
+      "profile": {
+        "name": "Charlie",
+        "settings": {
+          "theme": "dark",
+          "notifications": true
+        }
+      }
+    },
+    "expectedEncryptedValue": {
+      "contact": "eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJwaG9uZSI6IjEyMy00NTYtNzg5MCJ9",
+      "profile": "eyJuYW1lIjoiQ2hhcmxpZSIsInNldHRpbmdzIjp7InRoZW1lIjoiZGFyayIsIm5vdGlmaWNhdGlvbnMiOnRydWV9fQ=="
+    }
+  }
+]
