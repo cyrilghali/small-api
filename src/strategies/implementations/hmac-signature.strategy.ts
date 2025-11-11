@@ -1,5 +1,5 @@
-import { createHmac } from "crypto";
 import { ISignatureStrategy } from "#types/signature.types";
+import { createHmac } from "crypto";
 
 export class HmacSignatureStrategy implements ISignatureStrategy {
   sign(payload: Record<string, any>, secret: string): string {
