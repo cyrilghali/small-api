@@ -7,25 +7,15 @@ export class CryptoService {
    * Decrypts all top-level properties of an object
    * Intelligently detects which values are encrypted using the strategy
    * @param payload - The object to decrypt
-   * @returns A new object with encrypted properties decrypted
+   * @returns A new object with encrypted properties decrypted, preserving input shape
    */
-  decrypt(payload: Record<string, any>): Record<string, any> {
-    const decrypted: Record<string, any> = {};
-
-    for (const [key, value] of Object.entries(payload)) {
-      if (typeof value === "string" && this.strategy.canDecrypt(value)) {
-        try {
-          const decodedValue = this.strategy.decrypt(value);
-          decrypted[key] = parseDecodedValue(decodedValue);
-        } catch {
-          decrypted[key] = value;
-        }
-      } else {
-        decrypted[key] = value;
-      }
-    }
-
-    return decrypted;
+  decrypt<T extends Record<string, any>>(payload: T): T {
+    return Object.fromEntries(
+      Object.entries(payload).map(([key, value]) => [
+        key,
+        typeof value === "string" && this.strategy.canDecrypt(value) ? tryDecrypt(value, this.strategy.decrypt.bind(this.strategy)) : value,
+      ]),
+    ) as T;
   }
 
   /**
@@ -34,44 +24,42 @@ export class CryptoService {
    * @returns A new object with all top-level properties encrypted
    */
   encrypt(payload: Record<string, any>): Record<string, string> {
-    const encrypted: Record<string, string> = {};
-
-    for (const [key, value] of Object.entries(payload)) {
-      const stringValue = valueToString(value);
-      encrypted[key] = this.strategy.encrypt(stringValue);
-    }
-
-    return encrypted;
+    return Object.fromEntries(Object.entries(payload).map(([key, value]) => [key, this.strategy.encrypt(valueToString(value))]));
   }
 }
 
 function parseDecodedValue(decoded: string): any {
-  if (decoded === "null") {
-    return null;
+  // Quick checks first (no exceptions)
+  if (decoded === "null") return null;
+  if (decoded === "true") return true;
+  if (decoded === "false") return false;
+
+  // Try number parsing
+  if (decoded.trim() !== "" && !Number.isNaN(Number(decoded))) {
+    return Number(decoded);
   }
 
-  // Try to parse as JSON (objects, arrays)
-  if ((decoded.startsWith("{") && decoded.endsWith("}")) || (decoded.startsWith("[") && decoded.endsWith("]"))) {
+  // Only try JSON.parse if string looks like JSON
+  const firstChar = decoded[0];
+  const lastChar = decoded[decoded.length - 1];
+
+  if ((firstChar === "{" && lastChar === "}") || (firstChar === "[" && lastChar === "]")) {
     try {
       return JSON.parse(decoded);
     } catch {
-      // If JSON parsing fails, treat as string
+      return decoded;
     }
   }
 
-  if (decoded === "true") {
-    return true;
-  }
-  if (decoded === "false") {
-    return false;
-  }
-
-  const numberValue = Number(decoded);
-  if (!Number.isNaN(numberValue) && decoded.trim() !== "") {
-    return numberValue;
-  }
-
   return decoded;
+}
+
+function tryDecrypt(value: string, decrypt: (v: string) => string): any {
+  try {
+    return parseDecodedValue(decrypt(value));
+  } catch {
+    return value;
+  }
 }
 
 function valueToString(value: any): string {

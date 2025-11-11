@@ -1,5 +1,10 @@
 import Joi from "joi";
 
+export const signPayloadSchema = Joi.object().unknown(true).required().messages({
+  "any.required": "payload is required",
+  "object.base": "payload must be a JSON object",
+});
+
 export const verifySignatureSchema = Joi.object({
   data: Joi.object().required().messages({
     "any.required": "data field is required",

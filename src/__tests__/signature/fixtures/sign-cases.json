@@ -1,6 +1,6 @@
 [
   {
-    "name": "sign simple string",
+    "name": "sign simple payload",
     "description": "Sign a simple string payload and return HMAC-SHA256 hex signature (order-independent)",
     "input": {
       "message": "hello world"
@@ -9,7 +9,7 @@
     "expectedSignature": "f7120f77ad7c741c5b17413d7dbb44413cea542c0b0ecae1751ff2caf23b195b"
   },
   {
-    "name": "sign object with multiple fields",
+    "name": "sign multi-field payload (order-independent)",
     "description": "Sign a payload with multiple fields (properties sorted canonically)",
     "input": {
       "user": "alice",
@@ -20,7 +20,18 @@
     "expectedSignature": "ee3e567037651939d72312625d8f3eb6251ed0b3246e284bbf854ae06393cdfc"
   },
   {
-    "name": "sign with special characters",
+    "name": "sign multi-field payload (order-independent) - part 2",
+    "description": "Sign a payload with multiple fields (properties sorted canonically)",
+    "input": {
+      "action": "transfer",
+      "user": "alice",
+      "amount": 100
+    },
+    "secret": "secret123",
+    "expectedSignature": "ee3e567037651939d72312625d8f3eb6251ed0b3246e284bbf854ae06393cdfc"
+  },
+  {
+    "name": "sign payload with special characters",
     "description": "Sign payload containing special characters and symbols",
     "input": {
       "text": "!@#$%^&*()",
@@ -30,7 +41,7 @@
     "expectedSignature": "8368fbecbb30163697e4c863ea43f5fc5d84f71238d77774d1f059fce1b0d141"
   },
   {
-    "name": "sign with boolean and null values",
+    "name": "sign payload with booleans and null",
     "description": "Sign payload containing boolean and null values",
     "input": {
       "active": true,

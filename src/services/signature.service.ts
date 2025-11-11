@@ -1,17 +1,27 @@
 import { ISignatureStrategy } from "#types/signature.types";
+import { err, ok, type Result } from "#utils/result";
 
 export class SignatureService {
   constructor(private strategy: ISignatureStrategy) {}
-
-  sign(payload: Record<string, any>, secret: string): string {
-    return this.strategy.sign(payload, secret);
+  sign(payload: Record<string, any>, secret: string): Result<string> {
+    try {
+      const signature = this.strategy.sign(payload, secret);
+      return ok(signature);
+    } catch (error) {
+      return err((error as Error).message);
+    }
   }
 
-  verify(payload: Record<string, any>, signature: null | string | undefined, secret: string): boolean {
+  verify(payload: Record<string, any>, signature: null | string | undefined, secret: string): Result<boolean> {
     if (!signature) {
-      return false;
+      return err("Signature is required");
     }
 
-    return this.strategy.verify(payload, signature, secret);
+    try {
+      const isValid = this.strategy.verify(payload, signature, secret);
+      return ok(isValid);
+    } catch (error) {
+      return err((error as Error).message);
+    }
   }
 }

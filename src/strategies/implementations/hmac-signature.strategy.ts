@@ -1,5 +1,5 @@
 import { ISignatureStrategy } from "#types/signature.types";
-import { createHmac } from "crypto";
+import { createHmac, timingSafeEqual } from "crypto";
 
 export class HmacSignatureStrategy implements ISignatureStrategy {
   sign(payload: Record<string, any>, secret: string): string {
@@ -9,25 +9,33 @@ export class HmacSignatureStrategy implements ISignatureStrategy {
 
   verify(payload: Record<string, any>, signature: string, secret: string): boolean {
     const expectedSignature = this.sign(payload, secret);
-    return expectedSignature === signature;
+    try {
+      return timingSafeEqual(Buffer.from(expectedSignature, "hex"), Buffer.from(signature, "hex"));
+    } catch {
+      // If signature format is invalid, comparison fails (not timing-safe, but safe from format issues)
+      return false;
+    }
   }
 }
 
-function canonicalizeJson(value: any): string {
-  if (value === null) {
-    return "null";
+export function canonicalizeJson(value: any): string {
+  return JSON.stringify(deepSortKeys(value));
+}
+
+export function deepSortKeys(value: any): any {
+  if (value === null || typeof value !== "object") {
+    return value;
   }
 
-  if (typeof value === "object") {
-    if (Array.isArray(value)) {
-      const items = value.map(canonicalizeJson);
-      return `[${items.join(",")}]`;
-    }
-
-    const keys = Object.keys(value).sort();
-    const items = keys.map((key) => `${JSON.stringify(key)}:${canonicalizeJson(value[key])}`);
-    return `{${items.join(",")}}`;
+  if (Array.isArray(value)) {
+    return value.map(deepSortKeys);
   }
 
-  return JSON.stringify(value);
+  const sorted: Record<string, any> = {};
+  Object.keys(value)
+    .sort()
+    .forEach((key) => {
+      sorted[key] = deepSortKeys(value[key]);
+    });
+  return sorted;
 }
