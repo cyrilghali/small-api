@@ -7,14 +7,11 @@ export class SignatureService {
     return this.strategy.sign(payload, secret);
   }
 
-  verify(payload: Record<string, any>, signature: string | null | undefined, secret: string): boolean {
+  verify(payload: Record<string, any>, signature: null | string | undefined, secret: string): boolean {
     if (!signature) {
       return false;
     }
 
-    // Extract payload without signature field
-    const { signature: _, ...payloadWithoutSignature } = payload;
-
-    return this.strategy.verify(payloadWithoutSignature, signature, secret);
+    return this.strategy.verify(payload, signature, secret);
   }
 }

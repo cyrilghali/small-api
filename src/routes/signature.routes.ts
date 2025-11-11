@@ -21,9 +21,15 @@ signatureRouter.post("/sign", (req, res) => {
 
 signatureRouter.post("/verify", (req, res) => {
   try {
+    const { signature, ...payload } = req.body;
+
+    if (!signature) {
+      sendError(res, "Signature field is required", HTTP_STATUS.BAD_REQUEST);
+      return;
+    }
+
     const secret = process.env.SIGNATURE_SECRET ?? "default-secret";
-    const signature = req.body.signature;
-    const isValid = signatureService.verify(req.body, signature, secret);
+    const isValid = signatureService.verify(payload, signature, secret);
     sendSuccess(res, { valid: isValid }, HTTP_STATUS.OK);
   } catch {
     sendError(res, ERROR_MESSAGES.INTERNAL_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
