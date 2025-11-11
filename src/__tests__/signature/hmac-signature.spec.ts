@@ -18,33 +18,38 @@ const signatureStrategy = new HmacSignatureStrategy();
 const signatureService = new SignatureService(signatureStrategy);
 
 describe("Signature - Sign", () => {
-  signCases.forEach(
-    (fixture: { description: string; expectedSignature: string; input: Record<string, any>; name: string; secret: string }) => {
-      it(`should ${fixture.name}`, () => {
-        const result = signatureService.sign(fixture.input, fixture.secret);
-        expect(result).toBe(fixture.expectedSignature);
-      });
+  signCases.forEach((fixture: { description: string; expectedSignature: string; input: Record<string, any>; name: string; secret: string }) => {
+    it(`should ${fixture.name}`, () => {
+      const result = signatureService.sign(fixture.input, fixture.secret);
+      expect(result).toBe(fixture.expectedSignature);
+    });
 
-      it(`should have consistent signature for ${fixture.name}`, () => {
-        const result1 = signatureService.sign(fixture.input, fixture.secret);
-        const result2 = signatureService.sign(fixture.input, fixture.secret);
-        expect(result1).toBe(result2);
-      });
-    },
-  );
+    it(`should have consistent signature for ${fixture.name}`, () => {
+      const result1 = signatureService.sign(fixture.input, fixture.secret);
+      const result2 = signatureService.sign(fixture.input, fixture.secret);
+      expect(result1).toBe(result2);
+    });
+  });
 });
 
 describe("Signature - Verify", () => {
   verifyCases.forEach(
-    (fixture: { description: string; expectedResult: boolean; name: string; payload: Record<string, any>; secret: string; signature: string | null }) => {
+    (fixture: {
+      data: Record<string, any>;
+      description: string;
+      expectedResult: boolean;
+      name: string;
+      secret: string;
+      signature: null | string;
+    }) => {
       it(`should ${fixture.name}`, () => {
-        const result = signatureService.verify(fixture.payload, fixture.signature, fixture.secret);
+        const result = signatureService.verify(fixture.data, fixture.signature, fixture.secret);
         expect(result).toBe(fixture.expectedResult);
       });
 
       it(`should have consistent verification for ${fixture.name}`, () => {
-        const result1 = signatureService.verify(fixture.payload, fixture.signature, fixture.secret);
-        const result2 = signatureService.verify(fixture.payload, fixture.signature, fixture.secret);
+        const result1 = signatureService.verify(fixture.data, fixture.signature, fixture.secret);
+        const result2 = signatureService.verify(fixture.data, fixture.signature, fixture.secret);
         expect(result1).toBe(result2);
       });
     },
@@ -52,13 +57,11 @@ describe("Signature - Verify", () => {
 });
 
 describe("Signature - Round-trip Sign and Verify", () => {
-  signCases.forEach(
-    (fixture: { description: string; expectedSignature: string; input: Record<string, any>; name: string; secret: string }) => {
-      it(`should successfully sign then verify ${fixture.name}`, () => {
-        const signature = signatureService.sign(fixture.input, fixture.secret);
-        const verified = signatureService.verify(fixture.input, signature, fixture.secret);
-        expect(verified).toBe(true);
-      });
-    },
-  );
+  signCases.forEach((fixture: { description: string; expectedSignature: string; input: Record<string, any>; name: string; secret: string }) => {
+    it(`should successfully sign then verify ${fixture.name}`, () => {
+      const signature = signatureService.sign(fixture.input, fixture.secret);
+      const verified = signatureService.verify(fixture.input, signature, fixture.secret);
+      expect(verified).toBe(true);
+    });
+  });
 });
