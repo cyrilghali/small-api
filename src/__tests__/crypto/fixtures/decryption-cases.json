@@ -1,0 +1,128 @@
+[
+  {
+    "name": "Decrypt simple Base64 strings",
+    "description": "Keys stay plaintext. Base64 values are decoded back to plaintext.",
+    "input": {
+      "name": "Sm9obiBEb2U=",
+      "email": "am9obkBleGFtcGxlLmNvbQ=="
+    },
+    "expectedDecryptedValue": {
+      "name": "John Doe",
+      "email": "john@example.com"
+    }
+  },
+  {
+    "name": "Decrypt nested object",
+    "description": "Keys stay plaintext. Base64 encoded JSON objects are decoded and parsed back to objects.",
+    "input": {
+      "user": "eyJuYW1lIjoiQWxpY2UiLCJhZ2UiOjMwfQ==",
+      "status": "YWN0aXZl"
+    },
+    "expectedDecryptedValue": {
+      "user": {
+        "name": "Alice",
+        "age": 30
+      },
+      "status": "active"
+    }
+  },
+  {
+    "name": "Decrypt mixed encoded and plain values",
+    "description": "Keys stay plaintext. Only valid Base64 values are decoded. Non-Base64 strings stay unchanged.",
+    "input": {
+      "name": "Sm9obiBEb2U=",
+      "plaintext": "I am not encoded"
+    },
+    "expectedDecryptedValue": {
+      "name": "John Doe",
+      "plaintext": "I am not encoded"
+    }
+  },
+  {
+    "name": "Decrypt boolean values",
+    "description": "Keys stay plaintext. Base64 encoded boolean strings are decoded and converted back to booleans.",
+    "input": {
+      "active": "dHJ1ZQ==",
+      "verified": "ZmFsc2U="
+    },
+    "expectedDecryptedValue": {
+      "active": true,
+      "verified": false
+    }
+  },
+  {
+    "name": "Decrypt null values",
+    "description": "Keys stay plaintext. Base64 encoded 'null' string is decoded and converted back to null.",
+    "input": {
+      "name": "Qm9i",
+      "age": "bnVsbA=="
+    },
+    "expectedDecryptedValue": {
+      "name": "Bob",
+      "age": null
+    }
+  },
+  {
+    "name": "Decrypt number values",
+    "description": "Keys stay plaintext. Base64 encoded number strings are decoded and converted back to numbers.",
+    "input": {
+      "age": "MjU=",
+      "score": "OTUuNQ=="
+    },
+    "expectedDecryptedValue": {
+      "age": 25,
+      "score": 95.5
+    }
+  },
+  {
+    "name": "Decrypt arrays",
+    "description": "Keys stay plaintext. Base64 encoded JSON arrays are decoded and parsed back to arrays.",
+    "input": {
+      "tags": "WyJqYXZhc2NyaXB0IiwidHlwZXNjcmlwdCJd",
+      "counts": "WzEsMiwzXQ=="
+    },
+    "expectedDecryptedValue": {
+      "tags": ["javascript", "typescript"],
+      "counts": [1, 2, 3]
+    }
+  },
+  {
+    "name": "Empty object",
+    "description": "Empty objects have no keys or values to process.",
+    "input": {},
+    "expectedDecryptedValue": {}
+  },
+  {
+    "name": "Round-trip complex structure",
+    "description": "Keys stay plaintext throughout. Complex nested objects are encrypted and decrypted maintaining structure.",
+    "input": {
+      "contact": "eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJwaG9uZSI6IjEyMy00NTYtNzg5MCJ9",
+      "profile": "eyJuYW1lIjoiQ2hhcmxpZSIsInNldHRpbmdzIjp7InRoZW1lIjoiZGFyayIsIm5vdGlmaWNhdGlvbnMiOnRydWV9fQ=="
+    },
+    "expectedDecryptedValue": {
+      "contact": {
+        "email": "john@example.com",
+        "phone": "123-456-7890"
+      },
+      "profile": {
+        "name": "Charlie",
+        "settings": {
+          "theme": "dark",
+          "notifications": true
+        }
+      }
+    }
+  },
+  {
+    "name": "Corrupted Base64 keeps original value",
+    "description": "If decryption fails (defensive error handling), the original value is kept unchanged. This ensures graceful degradation when a value that looks encrypted is actually corrupted.",
+    "input": {
+      "data": "!!!invalid_base64!!!",
+      "info": "corrupted====data"
+    },
+    "expectedDecryptedValue": {
+      "data": "!!!invalid_base64!!!",
+      "info": "corrupted====data"
+    }
+  }
+]
