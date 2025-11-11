@@ -1,5 +1,6 @@
 export const HTTP_STATUS = {
   BAD_REQUEST: 400,
   INTERNAL_SERVER_ERROR: 500,
+  NO_CONTENT: 204,
   OK: 200,
 } as const;
