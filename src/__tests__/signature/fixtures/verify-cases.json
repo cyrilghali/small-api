@@ -27,19 +27,19 @@
       "action": "transfer",
       "amount": 100
     },
-    "signature": "b00be499d6de8fb6c34c5cc0ab26d5416d37ff10ba74d2126030a96c7ed01133",
+    "signature": "ee3e567037651939d72312625d8f3eb6251ed0b3246e284bbf854ae06393cdfc",
     "secret": "wrong-secret",
     "expectedResult": false
   },
   {
     "name": "verify object with multiple fields",
-    "description": "Verify a signed object with multiple fields",
+    "description": "Verify a signed object with multiple fields (properties order-independent)",
     "payload": {
       "user": "alice",
       "action": "transfer",
       "amount": 100
     },
-    "signature": "b00be499d6de8fb6c34c5cc0ab26d5416d37ff10ba74d2126030a96c7ed01133",
+    "signature": "ee3e567037651939d72312625d8f3eb6251ed0b3246e284bbf854ae06393cdfc",
     "secret": "secret123",
     "expectedResult": true
   },
@@ -70,5 +70,17 @@
     "signature": "f7120f77ad7c741c5b17413d7dbb44413cea542c0b0ecae1751ff2caf23b195b",
     "secret": "my-secret-key",
     "expectedResult": false
+  },
+  {
+    "name": "verify with different property order",
+    "description": "Signature remains valid regardless of property order (canonical JSON)",
+    "payload": {
+      "amount": 100,
+      "action": "transfer",
+      "user": "alice"
+    },
+    "signature": "ee3e567037651939d72312625d8f3eb6251ed0b3246e284bbf854ae06393cdfc",
+    "secret": "secret123",
+    "expectedResult": true
   }
 ]

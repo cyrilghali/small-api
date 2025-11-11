@@ -1,5 +1,6 @@
 import { errorMiddleware } from "#middlewares/error.middleware";
 import { cryptoRouter } from "#routes/crypto.routes";
+import { signatureRouter } from "#routes/signature.routes";
 import { sendSuccess } from "#utils/response.utils";
 import express from "express";
 
@@ -14,7 +15,8 @@ app.get("/", (req, res) => {
   });
 });
 
-app.use("/", cryptoRouter);
+app.use("/crypto", cryptoRouter);
+app.use("/signature", signatureRouter);
 
 app.use(errorMiddleware);
 
