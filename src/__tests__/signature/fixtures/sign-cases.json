@@ -1,0 +1,50 @@
+[
+  {
+    "name": "sign simple string",
+    "description": "Sign a simple string payload and return HMAC-SHA256 hex signature",
+    "input": {
+      "message": "hello world"
+    },
+    "secret": "my-secret-key",
+    "expectedSignature": "f7120f77ad7c741c5b17413d7dbb44413cea542c0b0ecae1751ff2caf23b195b"
+  },
+  {
+    "name": "sign object with multiple fields",
+    "description": "Sign a payload with multiple fields",
+    "input": {
+      "user": "alice",
+      "action": "transfer",
+      "amount": 100
+    },
+    "secret": "secret123",
+    "expectedSignature": "b00be499d6de8fb6c34c5cc0ab26d5416d37ff10ba74d2126030a96c7ed01133"
+  },
+  {
+    "name": "sign with special characters",
+    "description": "Sign payload containing special characters and symbols",
+    "input": {
+      "text": "!@#$%^&*()",
+      "emoji": "🚀"
+    },
+    "secret": "special-secret",
+    "expectedSignature": "538ec7f7ca7121640e13f74f6649b27a619ded0efb150a644e7e79dd30810ef4"
+  },
+  {
+    "name": "sign with boolean and null values",
+    "description": "Sign payload containing boolean and null values",
+    "input": {
+      "active": true,
+      "verified": false,
+      "metadata": null
+    },
+    "secret": "bool-secret",
+    "expectedSignature": "9147a81e80df1ad330116e1f379a3185e2abb034a662de938045f34e62b21999"
+  },
+  {
+    "name": "sign empty object",
+    "description": "Sign an empty object payload",
+    "input": {},
+    "secret": "empty-secret",
+    "expectedSignature": "2029f511842e550e8e0511dce1ab883cfbe4531c0ad64cb5ce3eeb8997c47786"
+  }
+]

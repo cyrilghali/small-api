@@ -1,0 +1,74 @@
+[
+  {
+    "name": "verify valid signature",
+    "description": "Verify a payload with a valid HMAC-SHA256 signature returns true",
+    "payload": {
+      "message": "hello world"
+    },
+    "signature": "f7120f77ad7c741c5b17413d7dbb44413cea542c0b0ecae1751ff2caf23b195b",
+    "secret": "my-secret-key",
+    "expectedResult": true
+  },
+  {
+    "name": "verify invalid signature",
+    "description": "Verify a payload with an invalid signature returns false",
+    "payload": {
+      "message": "hello world"
+    },
+    "signature": "invalid_signature_12345",
+    "secret": "my-secret-key",
+    "expectedResult": false
+  },
+  {
+    "name": "verify with wrong secret",
+    "description": "Verify with a different secret than used for signing returns false",
+    "payload": {
+      "user": "alice",
+      "action": "transfer",
+      "amount": 100
+    },
+    "signature": "b00be499d6de8fb6c34c5cc0ab26d5416d37ff10ba74d2126030a96c7ed01133",
+    "secret": "wrong-secret",
+    "expectedResult": false
+  },
+  {
+    "name": "verify object with multiple fields",
+    "description": "Verify a signed object with multiple fields",
+    "payload": {
+      "user": "alice",
+      "action": "transfer",
+      "amount": 100
+    },
+    "signature": "b00be499d6de8fb6c34c5cc0ab26d5416d37ff10ba74d2126030a96c7ed01133",
+    "secret": "secret123",
+    "expectedResult": true
+  },
+  {
+    "name": "verify empty object",
+    "description": "Verify a signed empty object",
+    "payload": {},
+    "signature": "2029f511842e550e8e0511dce1ab883cfbe4531c0ad64cb5ce3eeb8997c47786",
+    "secret": "empty-secret",
+    "expectedResult": true
+  },
+  {
+    "name": "verify without signature field",
+    "description": "Verify returns false when signature is not provided",
+    "payload": {
+      "message": "hello world"
+    },
+    "signature": null,
+    "secret": "my-secret-key",
+    "expectedResult": false
+  },
+  {
+    "name": "verify modified payload",
+    "description": "Verify returns false when payload has been modified after signing",
+    "payload": {
+      "message": "hello world modified"
+    },
+    "signature": "f7120f77ad7c741c5b17413d7dbb44413cea542c0b0ecae1751ff2caf23b195b",
+    "secret": "my-secret-key",
+    "expectedResult": false
+  }
+]
