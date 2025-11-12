@@ -1,45 +1,60 @@
-import { signatureService } from "#config/signature.config";
+import type { Request, Response } from "express";
+
+import { getSignatureSecret } from "#config/env.config";
 import { ERROR_MESSAGES } from "#constants/error-messages";
 import { HTTP_STATUS } from "#constants/http-status";
 import { validatePayload } from "#middlewares/validate-payload.middleware";
-import { verifySignatureSchema } from "#schemas/signature.schema";
-import { sendError, sendSuccess } from "#utils/response.utils";
+import { signPayloadSchema, verifySignatureSchema } from "#schemas/signature.schema";
+import { SignatureService } from "#services/signature.service";
+import { HmacSignatureStrategy } from "#strategies/implementations/hmac-signature.strategy";
+import { withErrorHandling } from "#utils/route-handler";
 import { Router } from "express";
 
+const signatureService = new SignatureService(new HmacSignatureStrategy());
 export const signatureRouter = Router();
 
-signatureRouter.use(validatePayload);
+signatureRouter.post(
+  "/sign",
+  validatePayload,
+  withErrorHandling((req: Request, res: Response) => {
+    const { error, value } = signPayloadSchema.validate(req.body);
 
-signatureRouter.post("/sign", (req, res) => {
-  try {
-    const secret = process.env.SIGNATURE_SECRET ?? "default-secret";
-    const signature = signatureService.sign(req.body, secret);
-    sendSuccess(res, { signature }, HTTP_STATUS.OK);
-  } catch {
-    sendError(res, ERROR_MESSAGES.INTERNAL_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
-  }
-});
+    if (error) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ message: error.details[0]?.message || "" });
+      return;
+    }
+    const secret = getSignatureSecret();
+    const result = signatureService.sign(value, secret);
 
-signatureRouter.post("/verify", (req, res) => {
-  try {
+    if (result.ok) res.status(HTTP_STATUS.OK).json({ signature: result.value });
+    else res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: result.error });
+  }),
+);
+
+signatureRouter.post(
+  "/verify",
+  validatePayload,
+  withErrorHandling((req: Request, res: Response) => {
     const { error, value } = verifySignatureSchema.validate(req.body);
 
     if (error) {
-      const message = error.details[0]?.message || ERROR_MESSAGES.INTERNAL_ERROR;
-      sendError(res, message, HTTP_STATUS.BAD_REQUEST);
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ message: error.details[0]?.message || "" });
       return;
     }
 
-    const secret = process.env.SIGNATURE_SECRET ?? "default-secret";
-    const isValid = signatureService.verify(value.data, value.signature, secret);
+    const secret = getSignatureSecret();
+    const result = signatureService.verify(value.data, value.signature, secret);
 
-    if (!isValid) {
-      sendError(res, "Invalid signature", HTTP_STATUS.BAD_REQUEST);
+    if (!result.ok) {
+      res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: result.error });
+      return;
+    }
+
+    if (!result.value) {
+      res.status(HTTP_STATUS.BAD_REQUEST).json({ message: ERROR_MESSAGES.INVALID_SIGNATURE });
       return;
     }
 
     res.status(HTTP_STATUS.NO_CONTENT).send();
-  } catch {
-    sendError(res, ERROR_MESSAGES.INTERNAL_ERROR, HTTP_STATUS.INTERNAL_SERVER_ERROR);
-  }
-});
+  }),
+);

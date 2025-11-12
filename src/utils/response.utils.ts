@@ -1,28 +1,21 @@
-import { ApiErrorResponse, ApiSuccessResponse } from "#types/api-response.types";
-import { Response } from "express";
+import type { ApiErrorResponse } from "#types/api-response.types";
+import type { Response } from "express";
 
 /**
- * Send a standardized error response
+ * Send an error response
  */
 export function sendError(res: Response, message: string, statusCode = 500, code?: string): void {
   const response: ApiErrorResponse = {
-    error: {
-      message,
-      ...(code && { code }),
-    },
-    success: false,
+    message,
+    ...(code && { code }),
   };
   res.status(statusCode).json(response);
 }
 
 /**
- * Send a standardized success response
+ * Send a success response with data
  */
 // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters, @typescript-eslint/no-inferrable-types
 export function sendSuccess<T>(res: Response, data: T, statusCode: number = 200): void {
-  const response: ApiSuccessResponse<T> = {
-    data,
-    success: true,
-  };
-  res.status(statusCode).json(response);
+  res.status(statusCode).json(data);
 }

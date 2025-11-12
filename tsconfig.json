@@ -2,9 +2,11 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "outDir": "./dist",
+    "rootDir": "./src",
     "baseUrl": ".",
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
+    "verbatimModuleSyntax": true,
     "paths": {
       "#*": ["./src/*"]
     }

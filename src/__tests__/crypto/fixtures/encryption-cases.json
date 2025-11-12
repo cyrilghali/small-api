@@ -1,6 +1,6 @@
 [
   {
-    "name": "Simple string properties",
+    "name": "encrypt simple string values",
     "description": "Keys stay plaintext. Only values are Base64 encoded.",
     "input": {
       "name": "John Doe",
@@ -9,10 +9,11 @@
     "expectedEncryptedValue": {
       "name": "Sm9obiBEb2U=",
       "email": "am9obkBleGFtcGxlLmNvbQ=="
-    }
+    },
+    "expectedStatus": 200
   },
   {
-    "name": "Object with nested object at depth 1",
+    "name": "encrypt nested objects (depth 1)",
     "description": "Keys stay plaintext. Nested objects are stringified then Base64 encoded.",
     "input": {
       "user": {
@@ -24,10 +25,11 @@
     "expectedEncryptedValue": {
       "user": "eyJuYW1lIjoiQWxpY2UiLCJhZ2UiOjMwfQ==",
       "status": "YWN0aXZl"
-    }
+    },
+    "expectedStatus": 200
   },
   {
-    "name": "Object with null value",
+    "name": "encrypt null values",
     "description": "Keys stay plaintext. Null is stringified to 'null' then Base64 encoded.",
     "input": {
       "name": "Bob",
@@ -36,10 +38,11 @@
     "expectedEncryptedValue": {
       "name": "Qm9i",
       "age": "bnVsbA=="
-    }
+    },
+    "expectedStatus": 200
   },
   {
-    "name": "Object with boolean values",
+    "name": "encrypt boolean values",
     "description": "Keys stay plaintext. Booleans are stringified then Base64 encoded.",
     "input": {
       "active": true,
@@ -48,10 +51,11 @@
     "expectedEncryptedValue": {
       "active": "dHJ1ZQ==",
       "verified": "ZmFsc2U="
-    }
+    },
+    "expectedStatus": 200
   },
   {
-    "name": "Object with number values",
+    "name": "encrypt number values",
     "description": "Keys stay plaintext. Numbers are stringified then Base64 encoded.",
     "input": {
       "age": 25,
@@ -60,10 +64,11 @@
     "expectedEncryptedValue": {
       "age": "MjU=",
       "score": "OTUuNQ=="
-    }
+    },
+    "expectedStatus": 200
   },
   {
-    "name": "Object with array values",
+    "name": "encrypt array values",
     "description": "Keys stay plaintext. Arrays are JSON stringified then Base64 encoded.",
     "input": {
       "tags": ["javascript", "typescript"],
@@ -72,16 +77,18 @@
     "expectedEncryptedValue": {
       "tags": "WyJqYXZhc2NyaXB0IiwidHlwZXNjcmlwdCJd",
       "counts": "WzEsMiwzXQ=="
-    }
+    },
+    "expectedStatus": 200
   },
   {
-    "name": "Empty object",
+    "name": "handle empty objects",
     "description": "Empty objects have no keys or values to encrypt.",
     "input": {},
-    "expectedEncryptedValue": {}
+    "expectedEncryptedValue": {},
+    "expectedStatus": 200
   },
   {
-    "name": "Complex deeply nested structure",
+    "name": "encrypt deeply nested structures",
     "description": "Keys stay plaintext. All nested objects at depth 1 are stringified and Base64 encoded.",
     "input": {
       "contact": {
@@ -99,6 +106,7 @@
     "expectedEncryptedValue": {
       "contact": "eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJwaG9uZSI6IjEyMy00NTYtNzg5MCJ9",
       "profile": "eyJuYW1lIjoiQ2hhcmxpZSIsInNldHRpbmdzIjp7InRoZW1lIjoiZGFyayIsIm5vdGlmaWNhdGlvbnMiOnRydWV9fQ=="
-    }
+    },
+    "expectedStatus": 200
   }
 ]

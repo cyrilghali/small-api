@@ -1,4 +1,4 @@
-import { ICryptoStrategy } from "#types/crypto.types";
+import type { ICryptoStrategy } from "#types/crypto.types";
 
 export class Base64CryptoStrategy implements ICryptoStrategy {
   canDecrypt(value: string): boolean {
