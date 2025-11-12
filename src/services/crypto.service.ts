@@ -7,15 +7,15 @@ export class CryptoService {
    * Decrypts all top-level properties of an object
    * Intelligently detects which values are encrypted using the strategy
    * @param payload - The object to decrypt
-   * @returns A new object with encrypted properties decrypted, preserving input shape
+   * @returns A new object with encrypted properties decrypted
    */
-  decrypt<T extends Record<string, any>>(payload: T): T {
+  decrypt(payload: Record<string, any>): Record<string, any> {
     return Object.fromEntries(
       Object.entries(payload).map(([key, value]) => [
         key,
         typeof value === "string" && this.strategy.canDecrypt(value) ? tryDecrypt(value, this.strategy.decrypt.bind(this.strategy)) : value,
       ]),
-    ) as T;
+    );
   }
 
   /**
