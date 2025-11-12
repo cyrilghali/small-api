@@ -13,7 +13,6 @@ export class HmacSignatureStrategy implements ISignatureStrategy {
     try {
       return timingSafeEqual(Buffer.from(expectedSignature, "hex"), Buffer.from(signature, "hex"));
     } catch {
-      // If signature format is invalid, comparison fails (not timing-safe, but safe from format issues)
       return false;
     }
   }

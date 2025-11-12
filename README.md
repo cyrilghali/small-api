@@ -3,13 +3,13 @@
 All routes were tested and implemented.
 
 In real-case scenario, APIs should answer to business needs, and that context has much influence on tech implementation.
-Choices were made here, for example, we assume that:
+Choices were made here, for example:
 
-- **JSON payload size** is limited to 100KB maximum. In theory, we should understand user needs and check if it fits.
+- **JSON payload size** is limited to 2MB maximum. In theory, we should understand user needs and check if it fits.
 - **All CORS origins** are allowed (`*`) as this is a development/testing API (production APIs should restrict to specific origins)
-- **No authentication/authorization** is implemented (production APIs should validate API keys, JWT tokens, or OAuth)
-- **No rate limiting** is configured (production should implement per-IP or per-user limits to prevent abuse)
-- **Logging is optional** and can be disabled for performance testing (production should log security events and errors)
+- **No authentication/authorization** is required. (production APIs should validate API keys, JWT tokens, or OAuth)
+- **No rate limiting** is required. (production should implement per-IP limits to prevent abuse)
+- **Logging is not required**, it’s lightly implemented to enhance the developer experience (DX)
 - **Strategy pattern** is used for crypto/signature algorithms to allow easy swapping of implementations without changing business logic. See [refactoring.guru/design-patterns/strategy](https://refactoring.guru/design-patterns/strategy).
 
 ## Tech Stack
@@ -31,10 +31,10 @@ pnpm install
 pnpm dev              # http://localhost:3000
 
 # Testing
-pnpm test:run         # 39 tests, once
+pnpm test:run
 
 # Production
-npm run build
+pnpm run build
 SIGNATURE_SECRET=$(openssl rand -hex 32) node dist/index.js
 
 # Load testing
