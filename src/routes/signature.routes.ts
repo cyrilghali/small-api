@@ -1,3 +1,4 @@
+import type { JSONPayload } from "#types/payload.types";
 import type { Request, Response } from "express";
 
 import { ERROR_MESSAGES } from "#constants/error-messages.constants";
@@ -17,6 +18,7 @@ signatureRouter.post(
   "/sign",
   validatePayload,
   withErrorHandling((req: Request, res: Response) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Schema validation result is any but validated before use
     const { error, value } = signPayloadSchema.validate(req.body);
 
     if (error) {
@@ -24,7 +26,7 @@ signatureRouter.post(
       return;
     }
     const secret = getSignatureSecret();
-    const result = signatureService.sign(value, secret);
+    const result = signatureService.sign(value as JSONPayload, secret);
 
     if (result.ok) res.status(HTTP_STATUS.OK).json({ signature: result.value });
     else res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: result.error });
@@ -35,6 +37,7 @@ signatureRouter.post(
   "/verify",
   validatePayload,
   withErrorHandling((req: Request, res: Response) => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Schema validation result is any but validated before use
     const { error, value } = verifySignatureSchema.validate(req.body);
 
     if (error) {
@@ -43,7 +46,7 @@ signatureRouter.post(
     }
 
     const secret = getSignatureSecret();
-    const result = signatureService.verify(value.data, value.signature, secret);
+    const result = signatureService.verify((value as JSONPayload).data as JSONPayload, (value as JSONPayload).signature as string, secret);
 
     if (!result.ok) {
       res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: result.error });

@@ -1,3 +1,5 @@
+import type { JSONValue } from "#types/payload.types";
+
 export interface Failure<E> {
   error: E;
   ok: false;
@@ -15,7 +17,7 @@ export const ok = <T>(value: T): ResultHelper<T> => ({
   value,
 });
 
-export const err = <E = string>(error: E): ResultHelper<any, E> => ({
+export const err = <E = string>(error: E): ResultHelper<JSONValue, E> => ({
   error,
   ok: false,
 });

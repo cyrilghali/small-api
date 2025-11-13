@@ -1,4 +1,6 @@
+import type { JSONPayload } from "#types/payload.types";
+
 export interface ISignatureStrategy {
-  sign(payload: Record<string, any>, secret: string): string;
-  verify(payload: Record<string, any>, signature: string, secret: string): boolean;
+  sign(payload: JSONPayload, secret: string): string;
+  verify(payload: JSONPayload, signature: string, secret: string): boolean;
 }

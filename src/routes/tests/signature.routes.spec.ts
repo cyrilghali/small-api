@@ -1,3 +1,5 @@
+import type { JSONPayload } from "#types/payload.types";
+
 import { signatureRouter } from "#routes/signature.routes";
 import express from "express";
 import { readFileSync } from "fs";
@@ -13,7 +15,7 @@ const verifyCasesPath = join(__dirname, "fixtures", "verify-cases.json");
 const signCasesPath = join(__dirname, "fixtures", "sign-cases.json");
 
 const verifyCases: {
-  data: Record<string, any>;
+  data: JSONPayload;
   description: string;
   expectedResult: boolean;
   expectedStatus?: number;
@@ -24,7 +26,7 @@ const verifyCases: {
 
 const signCases: {
   description: string;
-  input: Record<string, any>;
+  input: JSONPayload;
   name: string;
   secret: string;
 }[] = JSON.parse(readFileSync(signCasesPath, "utf-8"));

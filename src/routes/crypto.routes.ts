@@ -1,3 +1,4 @@
+import type { JSONPayload } from "#types/payload.types";
 import type { Request, Response } from "express";
 
 import { HTTP_STATUS } from "#constants/http-status.constants";
@@ -14,7 +15,7 @@ cryptoRouter.post(
   "/encrypt",
   validatePayload,
   withErrorHandling((req: Request, res: Response) => {
-    const encrypted = cryptoService.encrypt(req.body as Record<string, any>);
+    const encrypted = cryptoService.encrypt(req.body as JSONPayload);
     res.status(HTTP_STATUS.OK).json(encrypted);
   }),
 );
@@ -23,7 +24,7 @@ cryptoRouter.post(
   "/decrypt",
   validatePayload,
   withErrorHandling((req: Request, res: Response) => {
-    const decrypted = cryptoService.decrypt(req.body as Record<string, any>);
+    const decrypted = cryptoService.decrypt(req.body as JSONPayload);
     res.status(HTTP_STATUS.OK).json(decrypted);
   }),
 );

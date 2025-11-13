@@ -1,4 +1,5 @@
 import type { ICryptoStrategy } from "#types/crypto.types";
+import type { JSONPayload, JSONValue } from "#types/payload.types";
 
 export class CryptoService {
   constructor(private strategy: ICryptoStrategy) {}
@@ -9,7 +10,7 @@ export class CryptoService {
    * @param payload - The object to decrypt
    * @returns A new object with encrypted properties decrypted
    */
-  decrypt(payload: Record<string, any>): Record<string, any> {
+  decrypt(payload: JSONPayload): JSONPayload {
     return Object.fromEntries(
       Object.entries(payload).map(([key, value]) => [
         key,
@@ -23,12 +24,12 @@ export class CryptoService {
    * @param payload - The object to encrypt
    * @returns A new object with all top-level properties encrypted
    */
-  encrypt(payload: Record<string, any>): Record<string, string> {
+  encrypt(payload: JSONPayload): Record<string, string> {
     return Object.fromEntries(Object.entries(payload).map(([key, value]) => [key, this.strategy.encrypt(valueToString(value))]));
   }
 }
 
-function parseDecodedValue(decoded: string): any {
+function parseDecodedValue(decoded: string): JSONValue {
   if (decoded === "null") return null;
   if (decoded === "true") return true;
   if (decoded === "false") return false;
@@ -44,7 +45,7 @@ function parseDecodedValue(decoded: string): any {
   }
 }
 
-function tryDecrypt(value: string, decrypt: (v: string) => string): any {
+function tryDecrypt(value: string, decrypt: (v: string) => string): JSONValue {
   try {
     return parseDecodedValue(decrypt(value));
   } catch {
@@ -52,7 +53,7 @@ function tryDecrypt(value: string, decrypt: (v: string) => string): any {
   }
 }
 
-function valueToString(value: any): string {
+function valueToString(value: JSONValue): string {
   if (value === null) {
     return "null";
   }

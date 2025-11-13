@@ -55,7 +55,6 @@ DISABLE_LOGGING=true node dist/index.js
 - We could implement a logger and log errors inside catch blocks, making it easier to debug in production.
 - We could generate a request ID so we can correlate logs more easily.
 - We could have proper JSON logging so it can be aggregated in another observability tool.
-- We could improve `any` typing with `unknown` so it doesn't include null or undefined values.
 - Coverage is mostly enough. We could define a target and cover missing paths.
 - We could have concurrency and loads tests to check how robust our api is, and define SLAs for it
 - The list could be infinite here; it's more a matter of what the users' needs (both dev and client users) are and what we choose to tackle.
