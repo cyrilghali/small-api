@@ -1,7 +1,7 @@
 import type { NextFunction, Request, Response } from "express";
 
-import { ERROR_MESSAGES } from "#constants/error-messages";
-import { HTTP_STATUS } from "#constants/http-status";
+import { ERROR_MESSAGES } from "#constants/error-messages.constants";
+import { HTTP_STATUS } from "#constants/http-status.constants";
 
 export function validatePayload(req: Request, res: Response, next: NextFunction): void {
   const payload = req.body;

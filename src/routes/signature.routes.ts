@@ -1,13 +1,13 @@
 import type { Request, Response } from "express";
 
-import { getSignatureSecret } from "#config/env.config";
-import { ERROR_MESSAGES } from "#constants/error-messages";
-import { HTTP_STATUS } from "#constants/http-status";
+import { ERROR_MESSAGES } from "#constants/error-messages.constants";
+import { HTTP_STATUS } from "#constants/http-status.constants";
+import { withErrorHandling } from "#handlers/route.handler";
 import { validatePayload } from "#middlewares/validate-payload.middleware";
 import { signPayloadSchema, verifySignatureSchema } from "#schemas/signature.schema";
 import { SignatureService } from "#services/signature.service";
 import { HmacSignatureStrategy } from "#strategies/implementations/hmac-signature.strategy";
-import { withErrorHandling } from "#utils/route-handler";
+import { getSignatureSecret } from "#utils/env.helper";
 import { Router } from "express";
 
 const signatureService = new SignatureService(new HmacSignatureStrategy());

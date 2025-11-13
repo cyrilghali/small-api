@@ -1,11 +1,11 @@
 import type { ISignatureStrategy } from "#types/signature.types";
-import type { Result } from "#utils/result";
+import type { ResultHelper } from "#utils/result.helper";
 
-import { err, ok } from "#utils/result";
+import { err, ok } from "#utils/result.helper";
 
 export class SignatureService {
   constructor(private strategy: ISignatureStrategy) {}
-  sign(payload: Record<string, any>, secret: string): Result<string> {
+  sign(payload: Record<string, any>, secret: string): ResultHelper<string> {
     try {
       const signature = this.strategy.sign(payload, secret);
       return ok(signature);
@@ -14,7 +14,7 @@ export class SignatureService {
     }
   }
 
-  verify(payload: Record<string, any>, signature: null | string | undefined, secret: string): Result<boolean> {
+  verify(payload: Record<string, any>, signature: null | string | undefined, secret: string): ResultHelper<boolean> {
     if (!signature) {
       return err("Signature is required");
     }
