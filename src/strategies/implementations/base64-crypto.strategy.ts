@@ -4,7 +4,8 @@ export class Base64CryptoStrategy implements ICryptoStrategy {
   canDecrypt(value: string): boolean {
     try {
       return Buffer.from(value, "base64").toString("base64") === value;
-    } catch {
+    } catch (error) {
+      console.error("Error validating base64:", { error });
       return false;
     }
   }

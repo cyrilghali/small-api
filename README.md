@@ -52,7 +52,6 @@ DISABLE_LOGGING=true node dist/index.js
 
 ## What could be improved
 
-- We could implement a logger and log errors inside catch blocks, making it easier to debug in production.
 - We could generate a request ID so we can correlate logs more easily.
 - We could have proper JSON logging so it can be aggregated in another observability tool.
 - Coverage is mostly enough. We could define a target and cover missing paths.

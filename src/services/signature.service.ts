@@ -11,6 +11,7 @@ export class SignatureService {
       const signature = this.strategy.sign(payload, secret);
       return ok(signature);
     } catch (error) {
+      console.error("Error signing payload:", { error });
       return err((error as Error).message);
     }
   }
@@ -24,6 +25,7 @@ export class SignatureService {
       const isValid = this.strategy.verify(payload, signature, secret);
       return ok(isValid);
     } catch (error) {
+      console.error("Error verifying signature:", { error });
       return err((error as Error).message);
     }
   }

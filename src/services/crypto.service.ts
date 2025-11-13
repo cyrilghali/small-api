@@ -40,7 +40,8 @@ function parseDecodedValue(decoded: string): JSONValue {
 
   try {
     return JSON.parse(decoded);
-  } catch {
+  } catch (error) {
+    console.error("Failed to parse decoded value:", { decoded, error });
     return decoded;
   }
 }
@@ -48,7 +49,8 @@ function parseDecodedValue(decoded: string): JSONValue {
 function tryDecrypt(value: string, decrypt: (v: string) => string): JSONValue {
   try {
     return parseDecodedValue(decrypt(value));
-  } catch {
+  } catch (error) {
+    console.error("Failed to decrypt value:", { error });
     return value;
   }
 }

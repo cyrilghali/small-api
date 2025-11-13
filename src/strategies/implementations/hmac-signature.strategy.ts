@@ -13,7 +13,8 @@ export class HmacSignatureStrategy implements ISignatureStrategy {
     const expectedSignature = this.sign(payload, secret);
     try {
       return timingSafeEqual(Buffer.from(expectedSignature, "hex"), Buffer.from(signature, "hex"));
-    } catch {
+    } catch (error) {
+      console.error("Error verifying signature with timingSafeEqual:", { error });
       return false;
     }
   }

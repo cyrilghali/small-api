@@ -10,7 +10,8 @@ import { HTTP_STATUS } from "#constants/http-status.constants";
 export const withErrorHandling = (handler: (req: Request, res: Response) => Promise<void> | void) => async (req: Request, res: Response) => {
   try {
     await handler(req, res);
-  } catch {
+  } catch (error) {
+    console.error("Route handler error:", { error, method: req.method, path: req.path });
     res.status(HTTP_STATUS.INTERNAL_SERVER_ERROR).json({ message: ERROR_MESSAGES.INTERNAL_ERROR });
   }
 };
