@@ -57,6 +57,5 @@ DISABLE_LOGGING=true node dist/index.js
 - We could have proper JSON logging so it can be aggregated in another observability tool.
 - We could improve `any` typing with `unknown` so it doesn't include null or undefined values.
 - Coverage is mostly enough. We could define a target and cover missing paths.
-- We could benefit from a better test structure file to clearly distinguish what are unit tests, what are integration tests, and what are e2e ones.
 - We could have concurrency and loads tests to check how robust our api is, and define SLAs for it
 - The list could be infinite here; it's more a matter of what the users' needs (both dev and client users) are and what we choose to tackle.
